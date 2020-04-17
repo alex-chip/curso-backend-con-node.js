@@ -25,11 +25,11 @@ function moviesApi(app) {
   router.get('/:movieID', async function(req, res, next) {
     const { movieId } = req.params;
     try {
-      const movies = await moviesService.getMovie({ movieId});
+      const movie = await moviesService.getMovie({ movieId});
 
       res.status(200).json({
-        data: movies,
-        message: 'movies retrieved'
+        data: movie,
+        message: 'movie retrieved'
       });
     } catch (err) {
       next(err);
@@ -43,7 +43,7 @@ function moviesApi(app) {
 
       res.status(201).json({
         data: createMovieId,
-        message: 'Create movies'
+        message: 'Create movie'
       });
     } catch (err) {
       next(err);
@@ -58,7 +58,7 @@ function moviesApi(app) {
 
       res.status(200).json({
         data: updatedMovieId,
-        message: 'movies updated'
+        message: 'movie updated'
       });
     } catch (err) {
       next(err);
@@ -72,7 +72,22 @@ function moviesApi(app) {
 
       res.status(200).json({
         data: deletedMovieId,
-        message: 'movies deleted'
+        message: 'movie deleted'
+      });
+    } catch (err) {
+      next(err);
+    }
+  });
+
+  router.patch('/:movieId', async function(req, res, next) {
+    const { movieId } = req.params;
+    const { body: movie } = req;
+    try {
+      const patchMovieId = await moviesService.patchMovie({ movieId, movie });
+
+      res.status(200).json({
+        data: patchMovieId,
+        message: 'partial movie updated'
       });
     } catch (err) {
       next(err);
