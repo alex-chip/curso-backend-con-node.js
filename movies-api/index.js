@@ -5,28 +5,28 @@ const app = express();
 const {config } = require('./config/index');
 const moviesApi = require('./routes/movies.js');
 
-const { logErrors, errorHandler} = require('./utils/middleware/errorHandlers');
+const { logErrors, wrapErrors, errorHandler} = require('./utils/middleware/errorHandlers');
 
+const notFoundHandler = require('./utils/middleware/notFoundHandler');
+
+// body-parser
 app.use(express.json())
+
+// routes
 moviesApi(app);
 
-/* app.get('/', function (req, res) {
-  res.send('Hello World!')
-}); */
-
-/* app.get('/bisiesto/:anio', function (req, res) {
-  const year = req.params.anio;
-  ((year % 4 === 0 && year % 100 !== 0) || year % 400 === 0) ?
-  res.send(`El año ${year} es bisiesto`) :
-  res.send(`El año ${year} NO es bisiesto`)
-}); */
+// capturar error 404
+app.use(notFoundHandler);
 
 app.get('/json', function (req, res) {
   res.json('Hello Json!')
 });
 
-app.use(logErrors);
-app.use(errorHandler);
+// errors middelware
+app
+  .use(logErrors)
+  .use(wrapErrors)
+  .use(errorHandler)
 
 app.listen(config.port, function() {
   console.log(`Listening http://localhost:${config.port}`)
