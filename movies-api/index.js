@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 
 const app = express();
 
@@ -11,6 +12,7 @@ const notFoundHandler = require('./utils/middleware/notFoundHandler');
 
 // body-parser
 app.use(express.json())
+app.use(morgan('dev'));
 
 // routes
 moviesApi(app);
